@@ -1,10 +1,26 @@
 import "./App.css";
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { Suspense } from "react";
+import Login from "./views/auth/Login";
+import SignUp from "./views/auth/Signup";
+import Home from "./views/Home";
 function App() {
   return (
-    <div className="App">
-      <p>Welcome to Digital Moment</p>
-    </div>
+    <Suspense>
+      <Router>
+        <Routes>
+          <Route path={"/login"} element={<Login />} />
+          <Route path={"/signup"} element={<SignUp />} />
+          <Route path={"/home"} element={<Home />} />
+          <Route path="*" element={<Navigate to={"/login"} />} />
+        </Routes>
+      </Router>
+    </Suspense>
   );
 }
 
