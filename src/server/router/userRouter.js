@@ -3,18 +3,18 @@ const router = express.Router();
 
 import User from "../model/User.js";
 
-router.get('/get/:username', async (req, res) => {
-  const {username} = req.params;
+router.get('/get/:email', async (req, res) => {
+  const {email} = req.params;
   const user = await User.findOne({
-    username: username
+    email: email
   });
   res.status(200).json({user: user});
 })
 
-router.get('/get/:username/checkPassword/:password', async (req, res) => {
-  const {username, password} = req.params;
+router.get('/get/:email/checkPassword/:password', async (req, res) => {
+  const {email, password} = req.params;
   const user = await User.findOne({
-    username: username
+    email: email
   });
   res.status(200).json({
     match: user.password === password
