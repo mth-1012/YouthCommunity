@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import "./assets/styles/customcss.css";
 import { Suspense } from "react";
 import Login from "./views/auth/Login";
 import SignUp from "./views/auth/Signup";
