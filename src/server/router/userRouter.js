@@ -17,7 +17,7 @@ router.get('/get/:email/checkPassword/:password', async (req, res) => {
     email: email
   });
   res.status(200).json({
-    match: user.password === password
+    match: !!user && user.password === password
   })
 })
 
