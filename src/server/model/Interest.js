@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const {Schema} = mongoose;
 
 const interestSchema = new Schema({
   name: String,
 })
 
-module.exports = interestSchema;
+const Interest = mongoose.model('Interest', interestSchema);
+
+export default Interest;
