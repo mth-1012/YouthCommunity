@@ -1,31 +1,26 @@
 import * as React from "react";
 import NavBar from "./NavBar";
-import {styled} from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import {red} from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import axios from "axios";
-import * as qs from "qs";
+import Chip from "@mui/material/Chip";
 import {Box} from "@mui/system";
-import Moment from "react-moment";
 import moment from "moment";
 import api from "../api";
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
+import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 
 export default function HomeLocal() {
   const [filteredPosts, setFilteredPosts] = React.useState([]);
   const [postList, setPostList] = React.useState([]);
-  const [currentTab, setCurrentTab] = React.useState(0);
 
   const fetchData = async () => {
     const config = {
@@ -128,6 +123,9 @@ export default function HomeLocal() {
                 {/*  alt="Sample Image"*/}
                 {/*/>}*/}
                 <CardContent>
+                  {challenge ?
+                    <Chip icon={<PsychologyAltIcon/>} label="Challenge" color="secondary"/>
+                    : <Chip icon={<TipsAndUpdatesIcon/>} label="Idea" color="success"/>}
                   <Typography variant="body2" color="text.secondary">
                     <p style={{color: "#FF0000"}}>
                       {title + " | " + interest}

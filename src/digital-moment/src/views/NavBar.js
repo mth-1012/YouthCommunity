@@ -12,28 +12,12 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import axios from "axios";
-import AddPost from "./AddPost";
-import { styled, alpha } from '@mui/material/styles';
+import {styled, alpha} from '@mui/material/styles';
 import {useNavigate} from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControl,
-  Grid,
-  InputLabel,
-  OutlinedInput,
-  Select,
-  TextField,
-} from "@mui/material";
-import {Formik} from "formik";
-import api from "../api";
 import {red} from "@mui/material/colors";
+import AddPost from "./AddPost";
 
 const pages = ["Home", "Blog", JSON.parse(localStorage.getItem("userInfo"))?.location || "Local"];
 const settings = ["Profile", "Dashboard", "Logout"];
@@ -49,7 +33,7 @@ function NavBar() {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-  const Search = styled('div')(({ theme }) => ({
+  const Search = styled('div')(({theme}) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -63,8 +47,8 @@ function NavBar() {
       width: 'auto',
     },
   }));
-  
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
+
+  const SearchIconWrapper = styled('div')(({theme}) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
@@ -73,8 +57,8 @@ function NavBar() {
     alignItems: 'center',
     justifyContent: 'center',
   }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+
+  const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
@@ -182,21 +166,15 @@ function NavBar() {
           </Box>
 
 
-      
-
           <Search>
             <SearchIconWrapper>
-              <SearchIcon />
+              <SearchIcon/>
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{'aria-label': 'search'}}
             />
           </Search>
-
-
-
-
 
 
           <Box sx={{mr: 2}}>

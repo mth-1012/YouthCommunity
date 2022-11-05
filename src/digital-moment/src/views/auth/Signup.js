@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,20 +11,18 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useTheme } from "@mui/material/styles";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import { Formik } from "formik";
-import { useNavigate } from "react-router-dom";
-
-import axios from "axios";
+import {Formik} from "formik";
+import {useNavigate} from "react-router-dom";
 import api from "../../api";
-import { FormHelperText } from "@mui/material";
+import {FormHelperText} from "@mui/material";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -47,6 +45,7 @@ const names = [
   "Games",
   "Movies",
 ];
+
 function getStyles(name, personName, theme) {
   return {
     fontWeight:
@@ -55,6 +54,7 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
+
 function Copyright(props) {
   return (
     <Typography
@@ -88,7 +88,7 @@ export default function SignUp() {
   //   );
   // };
   const onChange = (e) => {
-    SetFormData({ ...formData, [e.target.name]: e.target.value });
+    SetFormData({...formData, [e.target.name]: e.target.value});
   };
   const [formData, SetFormData] = React.useState({
     password: "",
@@ -97,7 +97,7 @@ export default function SignUp() {
     email: "",
     interest: [],
   });
-  const { password, username, location, email, interest } = formData;
+  const {password, username, location, email, interest} = formData;
   const sendMail = async (event) => {
     event.preventDefault();
     const userData = new FormData(event.currentTarget);
@@ -123,7 +123,7 @@ export default function SignUp() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <CssBaseline/>
         <Formik
           initialValues={formData}
           onSubmit={sendMail}
@@ -147,7 +147,7 @@ export default function SignUp() {
             } else if (password.trim().length < 4) {
               errors.password = "Minimim 4 characters are required!";
             }
-            if (interest.length == 0) {
+            if (interest.length === 0) {
               errors.interest = "Interest is Required!";
             }
 
@@ -155,13 +155,13 @@ export default function SignUp() {
           }}
         >
           {({
-            values,
-            errors,
-            touched,
-            handleBlur,
-            isSubmitting,
-            handleSubmit,
-          }) => (
+              values,
+              errors,
+              touched,
+              handleBlur,
+              isSubmitting,
+              handleSubmit,
+            }) => (
             <Box
               sx={{
                 marginTop: 5,
@@ -170,8 +170,8 @@ export default function SignUp() {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
+              <Avatar sx={{m: 1, bgcolor: "secondary.main"}}>
+                <LockOutlinedIcon/>
               </Avatar>
               <Typography component="h1" variant="h5">
                 Sign up
@@ -180,7 +180,7 @@ export default function SignUp() {
                 component="form"
                 noValidate
                 onSubmit={handleSubmit}
-                sx={{ mt: 3 }}
+                sx={{mt: 3}}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
@@ -193,7 +193,7 @@ export default function SignUp() {
                       autoComplete="family-name"
                       onChange={(e) => onChange(e)}
                     />
-                    <FormHelperText sx={{ color: "#ff0000" }}>
+                    <FormHelperText sx={{color: "#ff0000"}}>
                       {errors.username && touched.username && errors.username}
                     </FormHelperText>
                   </Grid>
@@ -208,7 +208,7 @@ export default function SignUp() {
                       autoComplete="new-location"
                       onChange={(e) => onChange(e)}
                     />
-                    <FormHelperText sx={{ color: "#ff0000" }}>
+                    <FormHelperText sx={{color: "#ff0000"}}>
                       {errors.location && touched.location && errors.location}
                     </FormHelperText>
                   </Grid>
@@ -222,7 +222,7 @@ export default function SignUp() {
                       autoComplete="email"
                       onChange={(e) => onChange(e)}
                     />
-                    <FormHelperText sx={{ color: "#ff0000" }}>
+                    <FormHelperText sx={{color: "#ff0000"}}>
                       {errors.email && touched.email && errors.email}
                     </FormHelperText>
                   </Grid>
@@ -237,14 +237,14 @@ export default function SignUp() {
                       autoComplete="new-password"
                       onChange={(e) => onChange(e)}
                     />
-                    <FormHelperText sx={{ color: "#ff0000" }}>
+                    <FormHelperText sx={{color: "#ff0000"}}>
                       {errors.password && touched.password && errors.password}
                     </FormHelperText>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControlLabel
                       control={
-                        <Checkbox value="allowExtraEmails" color="primary" />
+                        <Checkbox value="allowExtraEmails" color="primary"/>
                       }
                       label="I want to receive inspiration, new posts and updates via email."
                     />
@@ -252,7 +252,7 @@ export default function SignUp() {
                   <Grid item>
                     <FormControl
                       required
-                      sx={{ m: 1, minWidth: 410 }}
+                      sx={{m: 1, minWidth: 410}}
                       name="interest"
                     >
                       <InputLabel id="demo-multiple-chip-label">
@@ -274,10 +274,10 @@ export default function SignUp() {
                         }
                         renderValue={(selected) => (
                           <Box
-                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                            sx={{display: "flex", flexWrap: "wrap", gap: 0.5}}
                           >
                             {selected.map((value) => (
-                              <Chip key={value} label={value} />
+                              <Chip key={value} label={value}/>
                             ))}
                           </Box>
                         )}
@@ -294,7 +294,7 @@ export default function SignUp() {
                         ))}
                       </Select>
                     </FormControl>
-                    <FormHelperText sx={{ color: "#ff0000" }}>
+                    <FormHelperText sx={{color: "#ff0000"}}>
                       {errors.interest && touched.interest && errors.interest}
                     </FormHelperText>
                   </Grid>
@@ -303,7 +303,7 @@ export default function SignUp() {
                   type="submit"
                   fullWidth
                   variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
+                  sx={{mt: 3, mb: 2}}
                 >
                   Sign Up
                 </Button>
@@ -318,7 +318,7 @@ export default function SignUp() {
             </Box>
           )}
         </Formik>
-        <Copyright sx={{ mt: 2 }} />
+        <Copyright sx={{mt: 2}}/>
       </Container>
     </ThemeProvider>
   );
