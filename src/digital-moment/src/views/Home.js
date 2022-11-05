@@ -15,7 +15,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import CityState from "./citystate";
 import axios from "axios";
 import * as qs from "qs";
 import { Box } from "@mui/system";
@@ -23,6 +22,7 @@ import Moment from "react-moment";
 import moment from "moment";
 import api from "../api";
 import { Tab, Tabs } from "@mui/material";
+
 export default function Home() {
   const [filteredPosts, setFilteredPosts] = React.useState([]);
   const [postList, setPostList] = React.useState([]);
@@ -47,7 +47,7 @@ export default function Home() {
     );
     if (res.data?.postList) {
       const challangePost = res.data.postList.filter(
-        ({ challenge }) => challenge
+        ({challenge}) => challenge
       );
       setFilteredPosts(challangePost);
       setPostList(res.data.postList);
@@ -67,7 +67,7 @@ export default function Home() {
     };
     const upvoteRes = await api.post(`/post/${postId}/upvote`, config);
     if (upvoteRes?.data.success) {
-      const clickedPost = postList.find(({ _id }) => _id === postId);
+      const clickedPost = postList.find(({_id}) => _id === postId);
       clickedPost.upvote += 1;
       setPostList([...postList, clickedPost]);
     }
@@ -75,10 +75,10 @@ export default function Home() {
 
   const handleTabChange = (event, newValue) => {
     if (newValue === 0) {
-      const challangePost = postList.filter(({ challenge }) => challenge);
+      const challangePost = postList.filter(({challenge}) => challenge);
       setFilteredPosts(challangePost);
     } else {
-      const ideaPosts = postList.filter(({ challenge }) => !challenge);
+      const ideaPosts = postList.filter(({challenge}) => !challenge);
       setFilteredPosts(ideaPosts);
     }
     setCurrentTab(newValue);
@@ -86,12 +86,12 @@ export default function Home() {
   return (
     <Box
       sx={{
-        height: 700,
+        height: 1000,
         // position: "absolute",
         overflow: "hidden",
       }}
     >
-      <NavBar />
+      <NavBar/>
       <Box
         sx={{
           width: "100%",
@@ -112,94 +112,94 @@ export default function Home() {
         >
           <Tab
             label="Challenge"
-            sx={{ flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1 }}
+            sx={{flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1}}
           />
           <Tab
             label="Idea"
-            sx={{ flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1 }}
+            sx={{flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1}}
           />
         </Tabs>
       </Box>
       <Box
         sx={{
-          height: 590,
+          width: "100%",
+          height: "100%",
           overflowY: "scroll",
           // position: "relative",
         }}
       >
         {filteredPosts.length > 0 &&
-          filteredPosts.map(
-            ({
-              post,
-              username,
-              description,
-              createdAt,
-              title,
-              tags,
-              challenge,
-              interest,
-              upvote,
-              location,
-              _id,
-            }) => (
-              <Box
-                sx={{
-                  display: "inline-flex",
-                  // flexDirection: "row",
-                  mt: 2,
-                  mr: 2,
-                }}
-              >
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardHeader
-                    avatar={
-                      <Avatar sx={{ bgcolor: red[300] }} aria-label="recipe">
-                        {username.charAt(0).toUpperCase()}
-                      </Avatar>
-                    }
-                    action={
-                      <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                      </IconButton>
-                    }
-                    title={username + " | " + location}
-                    subheader={moment(
-                      createdAt.split("T")[0],
-                      "YYYYMMDD"
-                    ).fromNow()}
-                  />
-                  {/* <CardMedia
-                  component="img"
-                  height="194"
-                  //   image="./sample.png"
-                  image="https://www.sample-videos.com/img/Sample-png-image-1mb.png"
-                  alt="Paella dish"
-                /> */}
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                      <p style={{ color: "#FF0000" }}>
-                        {title + " | " + interest}
-                      </p>
-                      <br />
-                      {description}
-                    </Typography>
-                    {tags.map((tag) => (
-                      <span style={{ color: "#0000ff" }}> #{tag}</span>
-                    ))}
-                  </CardContent>
-                  <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteIcon onClick={() => increaseUpvote(_id)} />{" "}
-                      {upvote}
+        filteredPosts.map(
+          ({
+             post,
+             username,
+             description,
+             createdAt,
+             title,
+             tags,
+             challenge,
+             interest,
+             upvote,
+             location,
+             _id,
+           }) => (
+            <Box
+              sx={{
+                display: "inline-flex",
+                // flexDirection: "row",
+                mt: 2,
+                mr: 2,
+              }}
+            >
+              <Card sx={{maxWidth: 400}}>
+                <CardHeader
+                  avatar={
+                    <Avatar sx={{bgcolor: red[300]}} aria-label="recipe">
+                      {username.charAt(0).toUpperCase()}
+                    </Avatar>
+                  }
+                  action={
+                    <IconButton aria-label="settings">
+                      <MoreVertIcon/>
                     </IconButton>
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                  </CardActions>
-                </Card>
-              </Box>
-            )
-          )}
+                  }
+                  title={username + " | " + location}
+                  subheader={moment(
+                    createdAt.split("T")[0],
+                    "YYYYMMDD"
+                  ).fromNow()}
+                />
+                {/*{Math.random() > 0.5 && <CardMedia*/}
+                {/*  component="img"*/}
+                {/*  height="194"*/}
+                {/*  image="https://picsum.photos/400/300"*/}
+                {/*  alt="Sample Image"*/}
+                {/*/>}*/}
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary">
+                    <p style={{color: "#FF0000"}}>
+                      {title + " | " + interest}
+                    </p>
+                    <br/>
+                    {description}
+                  </Typography>
+                  {tags.map((tag) => (
+                    <span style={{color: "#0000ff"}}> #{tag.trim()}</span>
+                  ))}
+                </CardContent>
+                <CardActions disableSpacing>
+                  <IconButton aria-label="add to favorites">
+                    <FavoriteIcon onClick={() => increaseUpvote(_id)}/>{" "}
+                    {upvote}
+                  </IconButton>
+                  <IconButton aria-label="share">
+                    <ShareIcon/>
+                  </IconButton>
+                </CardActions>
+              </Card>
+            </Box>
+          )
+        )}
       </Box>
     </Box>
   );

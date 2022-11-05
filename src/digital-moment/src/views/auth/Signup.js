@@ -130,25 +130,25 @@ export default function SignUp() {
           validate={() => {
             const errors = {};
             if (!username.trim()) {
-              errors.username = "First name is Required !";
+              errors.username = "First Name is Required!";
             }
             if (!location.trim()) {
-              errors.location = "Location is Required !";
+              errors.location = "Location is Required!";
             }
             if (!email.trim()) {
-              errors.email = "Email is Required !";
+              errors.email = "Email is Required!";
             } else if (
               !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)
             ) {
-              errors.email = "Invalid email address !";
+              errors.email = "Invalid email address!";
             }
             if (!password.trim()) {
-              errors.password = "Password is Required !";
+              errors.password = "Password is Required!";
             } else if (password.trim().length < 4) {
-              errors.password = "Minimim 4 characters are required !";
+              errors.password = "Minimim 4 characters are required!";
             }
             if (interest.length == 0) {
-              errors.interest = "Interest is Required !";
+              errors.interest = "Interest is Required!";
             }
 
             return errors;
@@ -246,7 +246,7 @@ export default function SignUp() {
                       control={
                         <Checkbox value="allowExtraEmails" color="primary" />
                       }
-                      label="I want to receive inspiration, marketing promotions and updates via email."
+                      label="I want to receive inspiration, new posts and updates via email."
                     />
                   </Grid>
                   <Grid item>
