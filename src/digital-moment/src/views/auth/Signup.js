@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import api from "../../api";
+import { FormHelperText } from "@mui/material";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -63,7 +64,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit">Youth Community</Link> {new Date().getFullYear()}
+      <Link color="inherit">TEAM 5 CODE TO GIVE</Link>{" "}
+      {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -86,7 +88,6 @@ export default function SignUp() {
   //   );
   // };
   const onChange = (e) => {
-    console.log("FUNCTIONCALLED");
     SetFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const [formData, SetFormData] = React.useState({
@@ -114,7 +115,9 @@ export default function SignUp() {
     };
     const res = await api.post("/user/createUser", data, config);
     console.log("res from api ", res);
-    navigate("/login");
+    if (res.data.success) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -127,7 +130,10 @@ export default function SignUp() {
           validate={() => {
             const errors = {};
             if (!username.trim()) {
-              errors.username = "First name is required !";
+              errors.username = "First name is Required !";
+            }
+            if (!location.trim()) {
+              errors.location = "Location is Required !";
             }
             if (!email.trim()) {
               errors.email = "Email is Required !";
@@ -136,13 +142,13 @@ export default function SignUp() {
             ) {
               errors.email = "Invalid email address !";
             }
-            // else {
-            //   errors.email = "Email is already exists ! !";
-            // }
             if (!password.trim()) {
-              errors.password = "Password is required !";
-            } else if (password.trim().length < 6) {
-              errors.password = "Minimim 6 characters are required !";
+              errors.password = "Password is Required !";
+            } else if (password.trim().length < 4) {
+              errors.password = "Minimim 4 characters are required !";
+            }
+            if (interest.length == 0) {
+              errors.interest = "Interest is Required !";
             }
 
             return errors;
@@ -173,7 +179,7 @@ export default function SignUp() {
               <Box
                 component="form"
                 noValidate
-                onSubmit={sendMail}
+                onSubmit={handleSubmit}
                 sx={{ mt: 3 }}
               >
                 <Grid container spacing={2}>
@@ -187,21 +193,24 @@ export default function SignUp() {
                       autoComplete="family-name"
                       onChange={(e) => onChange(e)}
                     />
-                    <p className="FormError">
-                      {touched.username && errors.username}
-                    </p>
+                    <FormHelperText sx={{ color: "#ff0000" }}>
+                      {errors.username && touched.username && errors.username}
+                    </FormHelperText>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
                       required
                       fullWidth
                       name="location"
-                      label="location"
+                      label="Location"
                       type="location"
                       id="location"
                       autoComplete="new-location"
                       onChange={(e) => onChange(e)}
                     />
+                    <FormHelperText sx={{ color: "#ff0000" }}>
+                      {errors.location && touched.location && errors.location}
+                    </FormHelperText>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
@@ -213,7 +222,9 @@ export default function SignUp() {
                       autoComplete="email"
                       onChange={(e) => onChange(e)}
                     />
-                    <p className="FormError">{touched.email && errors.email}</p>
+                    <FormHelperText sx={{ color: "#ff0000" }}>
+                      {errors.email && touched.email && errors.email}
+                    </FormHelperText>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
@@ -226,6 +237,9 @@ export default function SignUp() {
                       autoComplete="new-password"
                       onChange={(e) => onChange(e)}
                     />
+                    <FormHelperText sx={{ color: "#ff0000" }}>
+                      {errors.password && touched.password && errors.password}
+                    </FormHelperText>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControlLabel
@@ -280,6 +294,9 @@ export default function SignUp() {
                         ))}
                       </Select>
                     </FormControl>
+                    <FormHelperText sx={{ color: "#ff0000" }}>
+                      {errors.interest && touched.interest && errors.interest}
+                    </FormHelperText>
                   </Grid>
                 </Grid>
                 <Button
@@ -287,7 +304,6 @@ export default function SignUp() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  // onClick={sendMail}
                 >
                   Sign Up
                 </Button>

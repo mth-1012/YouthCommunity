@@ -79,7 +79,6 @@ export default function Home() {
       setFilteredPosts(challangePost);
     } else {
       const ideaPosts = postList.filter(({ challenge }) => !challenge);
-      console.log("IDEA POST : ", ideaPosts);
       setFilteredPosts(ideaPosts);
     }
     setCurrentTab(newValue);
@@ -112,7 +111,7 @@ export default function Home() {
           }}
         >
           <Tab
-            label="Challange"
+            label="Challenge"
             sx={{ flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1 }}
           />
           <Tab
