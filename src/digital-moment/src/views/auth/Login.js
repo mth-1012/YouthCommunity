@@ -14,6 +14,9 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API from "../../api";
+import api from "../../api";
+import { Alert, Snackbar } from "@mui/material";
 function Copyright(props) {
   return (
     <Typography
@@ -32,7 +35,11 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  var vertical = "top";
+  var horizontal = "center";
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = React.useState();
+  const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -52,17 +59,28 @@ export default function Login() {
       },
       validateStatus: () => true,
     };
-    const res = await axios.get(
-      `http://localhost:5000/get/${credentials.email}/checkPassword/${credentials.password}`,
+    const res = await api.get(
+      `/user/get/${credentials.email}/checkPassword/${credentials.password}`,
       config
     );
     console.log("RES ", res);
     if (res.data.match) {
-      navigate("/home");
       localStorage.setItem("email", credentials.email);
+      localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
+      setIsLogin(true);
+      setSnackBarOpen(true);
+      navigate("/home");
     } else {
+      setIsLogin(false);
       navigate("/login");
+      setSnackBarOpen(true);
     }
+  };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackBarOpen(false);
   };
 
   return (
@@ -83,12 +101,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -131,6 +144,24 @@ export default function Login() {
                 <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
+              </Grid>
+              <Grid>
+                <Snackbar
+                  anchorOrigin={{ vertical, horizontal }}
+                  open={snackBarOpen}
+                  autoHideDuration={2000}
+                  onClose={handleClose}
+                >
+                  {isLogin ? (
+                    <Alert severity="success" onClose={handleClose}>
+                      Login Successful !
+                    </Alert>
+                  ) : (
+                    <Alert severity="error" onClose={handleClose}>
+                      Invalild credentials try again !
+                    </Alert>
+                  )}
+                </Snackbar>
               </Grid>
             </Grid>
           </Box>

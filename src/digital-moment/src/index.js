@@ -6,9 +6,6 @@ import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-export default axios.create({
-  baseURL: `http://localhost:5000`,
-});
 // const object = require("./config/default.json");
 // const BackendURL = object.BackendURL;
 // axios.defaults.baseURL = BackendURL;

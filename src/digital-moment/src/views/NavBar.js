@@ -28,6 +28,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Formik } from "formik";
+import api from "../api";
 const pages = ["Posts", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const names = ["Challange", "Solution"];
@@ -57,34 +58,6 @@ function NavBar() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-  const onChange = (e) => {
-    console.log("FUNCTIONCALLED");
-    SetFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  const [formData, SetFormData] = React.useState({
-    password: "",
-    username: "",
-    location: "",
-    email: "",
-    type: "Solution",
-  });
-  const { password, username, location, email, interest } = formData;
-
-  const addPost = async () => {
-    setOpen(true);
-    const config = {
-      method: "GET",
-      header: {
-        "Content-Type": "application/json",
-      },
-      validateStatus: () => true,
-    };
-    const res = await axios.get(
-      `http://localhost:5000/user/get/${localStorage.getItem("email")}`,
-      config
-    );
-    console.log("ADD POST  : ", res);
   };
 
   return (
@@ -175,15 +148,10 @@ function NavBar() {
               </Button>
             ))}
           </Box>
-          <Box>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={() => setOpen(true)}
-            >
-              AddPost
+
+          <Box sx={{ mr: 2 }}>
+            <Button sx={{ color: "white" }} onClick={() => setOpen(true)}>
+              Add Post
             </Button>
           </Box>
           <Box>

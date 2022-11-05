@@ -6,6 +6,10 @@ const postSchema = new Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    required: true
+  },
   title: {
     type: String,
     required: true
@@ -20,11 +24,25 @@ const postSchema = new Schema({
   },
   tags: [String],
   location: String,
+  challenge: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
   starUN: {
     type: Boolean,
     required: true,
     default: false
   },
+  createdAt: {
+    type: Date,
+    required: true
+  },
+  upvote: {
+    type: Number,
+    required: true,
+    default: 0
+  }
 })
 
 const Post = mongoose.model('Post', postSchema);

@@ -16,48 +16,192 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CityState from "./citystate";
-
+import axios from "axios";
+import * as qs from "qs";
+import { Box } from "@mui/system";
+import Moment from "react-moment";
+import moment from "moment";
+import api from "../api";
+import { Tab, Tabs } from "@mui/material";
 export default function Home() {
+  const [filteredPosts, setFilteredPosts] = React.useState([]);
+  const [postList, setPostList] = React.useState([]);
+  const [currentTab, setCurrentTab] = React.useState(0);
+
+  const fetchData = async () => {
+    const config = {
+      method: "POST",
+      header: {
+        "Content-Type": "application/json",
+      },
+      validateStatus: () => true,
+    };
+    const currentUserData = JSON.parse(localStorage.getItem("userInfo"));
+    const res = await api.post(
+      "/post/getList/interest",
+      {
+        interests: currentUserData.interest,
+        chronological: false,
+      },
+      config
+    );
+    if (res.data?.postList) {
+      const challangePost = res.data.postList.filter(
+        ({ challenge }) => challenge
+      );
+      setFilteredPosts(challangePost);
+      setPostList(res.data.postList);
+    }
+    console.log("Fetch Post Response : ", res);
+  };
+  React.useEffect(() => {
+    console.log("Called Only Once");
+    fetchData();
+  }, []);
+  const increaseUpvote = async (postId) => {
+    const config = {
+      method: "POST",
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+    const upvoteRes = await api.post(`/post/${postId}/upvote`, config);
+    if (upvoteRes?.data.success) {
+      const clickedPost = postList.find(({ _id }) => _id === postId);
+      clickedPost.upvote += 1;
+      setPostList([...postList, clickedPost]);
+    }
+  };
+
+  const handleTabChange = (event, newValue) => {
+    if (newValue === 0) {
+      const challangePost = postList.filter(({ challenge }) => challenge);
+      setFilteredPosts(challangePost);
+    } else {
+      const ideaPosts = postList.filter(({ challenge }) => !challenge);
+      console.log("IDEA POST : ", ideaPosts);
+      setFilteredPosts(ideaPosts);
+    }
+    setCurrentTab(newValue);
+  };
   return (
-    <div>
+    <Box
+      sx={{
+        height: 700,
+        // position: "absolute",
+        overflow: "hidden",
+      }}
+    >
       <NavBar />
-      <Card sx={{ maxWidth: 345 }}>
-        <CardHeader
-          avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
-            </Avatar>
-          }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title="Umang Patel"
-          subheader="September 14, 2016"
-        />
-        <CardMedia
-          component="img"
-          height="194"
-          //   image="./sample.png"
-          image="https://www.sample-videos.com/img/Sample-png-image-1mb.png"
-          alt="Paella dish"
-        />
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            This impressive sunset photograph clicked by famous photographer.
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
-        </CardActions>
-      </Card>
-      {/* <CityState /> */}
-    </div>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          bgcolor: "background.paper",
+        }}
+      >
+        <Tabs
+          value={currentTab}
+          onChange={handleTabChange}
+          sx={{
+            flex: "1 1 auto",
+            display: "inline-block",
+            position: "relative",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Tab
+            label="Challange"
+            sx={{ flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1 }}
+          />
+          <Tab
+            label="Idea"
+            sx={{ flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1 }}
+          />
+        </Tabs>
+      </Box>
+      <Box
+        sx={{
+          height: 590,
+          overflowY: "scroll",
+          // position: "relative",
+        }}
+      >
+        {filteredPosts.length > 0 &&
+          filteredPosts.map(
+            ({
+              post,
+              username,
+              description,
+              createdAt,
+              title,
+              tags,
+              challenge,
+              interest,
+              upvote,
+              location,
+              _id,
+            }) => (
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  // flexDirection: "row",
+                  mt: 2,
+                  mr: 2,
+                }}
+              >
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ bgcolor: red[300] }} aria-label="recipe">
+                        {username.charAt(0).toUpperCase()}
+                      </Avatar>
+                    }
+                    action={
+                      <IconButton aria-label="settings">
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                    title={username + " | " + location}
+                    subheader={moment(
+                      createdAt.split("T")[0],
+                      "YYYYMMDD"
+                    ).fromNow()}
+                  />
+                  {/* <CardMedia
+                  component="img"
+                  height="194"
+                  //   image="./sample.png"
+                  image="https://www.sample-videos.com/img/Sample-png-image-1mb.png"
+                  alt="Paella dish"
+                /> */}
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      <p style={{ color: "#FF0000" }}>
+                        {title + " | " + interest}
+                      </p>
+                      <br />
+                      {description}
+                    </Typography>
+                    {tags.map((tag) => (
+                      <span style={{ color: "#0000ff" }}> #{tag}</span>
+                    ))}
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <IconButton aria-label="add to favorites">
+                      <FavoriteIcon onClick={() => increaseUpvote(_id)} />{" "}
+                      {upvote}
+                    </IconButton>
+                    <IconButton aria-label="share">
+                      <ShareIcon />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              </Box>
+            )
+          )}
+      </Box>
+    </Box>
   );
 }

@@ -7,6 +7,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import {
   Avatar,
   Box,
@@ -16,28 +18,42 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
+  Radio,
+  RadioGroup,
   Select,
   Typography,
 } from "@mui/material";
 import { Formik } from "formik";
-const names = ["Sports", "Technology", "Environment", "Politics", "Physics"];
+import api from "../api";
+const names = [
+  "Sports",
+  "Technology",
+  "Environment",
+  "School",
+  "Pets",
+  "Food",
+  "Fashion",
+  "Music",
+  "Games",
+  "Movies",
+];
 
 export default function AddPost(props) {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(props.openPopup);
 
   const onChange = (e) => {
-    console.log("FUNCTIONCALLED");
     SetFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const [formData, SetFormData] = React.useState({
     title: "",
     description: "",
-    type: "Solution",
+    postType: "challange",
     interest: "",
     tags: "",
   });
 
-  const { title, description, type, tags, interest } = formData;
+  const { title, description, postType, tags, interest } = formData;
   const uploadPost = async (event) => {
     event.preventDefault();
 
@@ -49,8 +65,8 @@ export default function AddPost(props) {
       },
       validateStatus: () => true,
     };
-    const res = await axios.get(
-      `http://localhost:5000/user/get/${localStorage.getItem("email")}`,
+    const res = await api.get(
+      `/user/get/${localStorage.getItem("email")}`,
       config
     );
 
@@ -59,7 +75,8 @@ export default function AddPost(props) {
         ...formData,
         ...res.data.user,
         tags: formData.tags.split(","),
-        challenge: true,
+        challenge: formData.postType === "challange",
+        interest: formData.interest,
       },
     };
     const config1 = {
@@ -69,21 +86,16 @@ export default function AddPost(props) {
       },
       validateStatus: () => true,
     };
-    const postRes = await axios.post(
-      `http://localhost:5000/post/createPost`,
-      data,
-      config1
-    );
+    const postRes = await api.post(`/post/createPost`, data, config1);
+    if (postRes.data.success) {
+      props.closeOpenPopup();
+    }
   };
   return (
     <div>
       <Dialog open={props.openPopup} onClose={props.closeOpenPopup}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Create Post</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText>
           <Formik
             initialValues={formData}
             onSubmit={uploadPost}
@@ -110,20 +122,16 @@ export default function AddPost(props) {
             }) => (
               <Box
                 sx={{
-                  marginTop: 5,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                 }}
               >
-                <Typography component="h1" variant="h5">
-                  Sign up
-                </Typography>
                 <Box
                   component="form"
-                  noValidate
                   sx={{ mt: 3 }}
                   onSubmit={uploadPost}
+                  validate
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -134,21 +142,6 @@ export default function AddPost(props) {
                         label="Post Title"
                         name="title"
                         autoComplete="family-name"
-                        onChange={(e) => onChange(e)}
-                      />
-                      <p className="FormError">
-                        {touched.title && errors.title}
-                      </p>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        required
-                        fullWidth
-                        name="interest"
-                        label="Interest"
-                        type="interest"
-                        id="interest"
-                        autoComplete="new-interest"
                         onChange={(e) => onChange(e)}
                       />
                     </Grid>
@@ -162,9 +155,6 @@ export default function AddPost(props) {
                         autoComplete="description"
                         onChange={(e) => onChange(e)}
                       />
-                      <p className="FormError">
-                        {touched.description && errors.description}
-                      </p>
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
@@ -177,9 +167,66 @@ export default function AddPost(props) {
                         onChange={(e) => onChange(e)}
                       />
                     </Grid>
+                    <Grid item>
+                      <FormControl
+                        required
+                        sx={{ minWidth: 550 }}
+                        name="interest"
+                      >
+                        <InputLabel id="demo-multiple-chip-label">
+                          Interest
+                        </InputLabel>
+                        <Select
+                          label="Interest *"
+                          id="demo-multiple-chip"
+                          required
+                          value={formData.interest}
+                          // onChange={handleChange}
+                          onChange={(e) => onChange(e)}
+                          name="interest"
+                          input={
+                            <OutlinedInput
+                              id="select-multiple-chip"
+                              label="Interest"
+                            />
+                          }
+                        >
+                          {names.map((name) => (
+                            <MenuItem key={name} value={name}>
+                              {name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <FormControl>
+                        <RadioGroup
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue={formData.postType}
+                          name="radio-buttons-group"
+                          onChange={(e) => onChange(e)}
+                        >
+                          <FormControlLabel
+                            value="challange"
+                            control={<Radio />}
+                            label="Challange"
+                          />
+                          <FormControlLabel
+                            value="idea"
+                            control={<Radio />}
+                            label="Idea"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </Grid>
                   </Grid>
                   <DialogActions>
-                    <Button type="submit" variant="contained">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      // onClick={props.closeOpenPopup}
+                    >
                       Upload Post
                     </Button>
                     <Button onClick={props.closeOpenPopup} variant="contained">

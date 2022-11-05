@@ -23,6 +23,7 @@ import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import api from "../../api";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -33,7 +34,18 @@ const MenuProps = {
     },
   },
 };
-const names = ["Sports", "Technology", "Environment", "Politics", "Physics"];
+const names = [
+  "Sports",
+  "Technology",
+  "Environment",
+  "School",
+  "Pets",
+  "Food",
+  "Fashion",
+  "Music",
+  "Games",
+  "Movies",
+];
 function getStyles(name, personName, theme) {
   return {
     fontWeight:
@@ -62,27 +74,17 @@ const theme = createTheme();
 export default function SignUp() {
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      username: data.get("username"),
-      password: data.get("password"),
-      interest: data.get("interest").split(","),
-    });
-  };
-  const [personName, setPersonName] = React.useState([]);
+  // const [interest, setInterest] = React.useState([]);
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+  // const handleChange = (event) => {
+  //   const {
+  //     target: { value },
+  //   } = event;
+  //   setInterest(
+  //     // On autofill we get a stringified value.
+  //     typeof value === "string" ? value.split(",") : value
+  //   );
+  // };
   const onChange = (e) => {
     console.log("FUNCTIONCALLED");
     SetFormData({ ...formData, [e.target.name]: e.target.value });
@@ -92,7 +94,7 @@ export default function SignUp() {
     username: "",
     location: "",
     email: "",
-    interest: "",
+    interest: [],
   });
   const { password, username, location, email, interest } = formData;
   const sendMail = async (event) => {
@@ -110,11 +112,7 @@ export default function SignUp() {
       },
       validateStatus: () => true,
     };
-    const res = await axios.post(
-      "http://localhost:5000/user/createUser",
-      data,
-      config
-    );
+    const res = await api.post("/user/createUser", data, config);
     console.log("res from api ", res);
     navigate("/login");
   };
@@ -154,7 +152,6 @@ export default function SignUp() {
             values,
             errors,
             touched,
-            handleChange,
             handleBlur,
             isSubmitting,
             handleSubmit,
@@ -252,8 +249,8 @@ export default function SignUp() {
                         id="demo-multiple-chip"
                         multiple
                         required
-                        value={personName}
-                        onChange={handleChange}
+                        value={interest}
+                        onChange={(e) => onChange(e)}
                         name="interest"
                         input={
                           <OutlinedInput
@@ -276,7 +273,7 @@ export default function SignUp() {
                           <MenuItem
                             key={name}
                             value={name}
-                            style={getStyles(name, personName, theme)}
+                            style={getStyles(name, interest, theme)}
                           >
                             {name}
                           </MenuItem>
