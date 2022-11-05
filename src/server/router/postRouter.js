@@ -63,7 +63,6 @@ router.get("/get/:id", async (req, res) => {
 
 router.post("/getList/interest", async (req, res) => {
   try {
-    console.log("FetchPosts ", req.body);
     const { interests, chronological } = req.body;
     let postList = [];
     for (const value of interests) {
@@ -85,5 +84,28 @@ router.post("/getList/interest", async (req, res) => {
     res.status(400).json(e.message);
   }
 });
+
+router.post("/getList/local", async (req, res) => {
+  try {
+    const { location, chronological } = req.body;
+    let postList = [];
+    const list = await Post.find().where("location", location);
+    postList = postList.concat(list);
+
+    if (chronological) {
+      postList.sort((a, b) => {
+        return b.createdAt - a.createdAt;
+      });
+    } else {
+      postList.sort((a, b) => {
+        return b.upvote - a.upvote;
+      });
+    }
+    res.status(200).json({ postList: postList });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json(e.message);
+  }
+})
 
 export default router;

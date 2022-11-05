@@ -30,7 +30,7 @@ import {
 import { Formik } from "formik";
 import api from "../api";
 import { red } from "@mui/material/colors";
-const pages = ["Home", "Blog", "Local"];
+const pages = ["Home", "Blog", JSON.parse(localStorage.getItem("userInfo"))?.location || "Local"];
 const settings = ["Profile", "Dashboard", "Logout"];
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);

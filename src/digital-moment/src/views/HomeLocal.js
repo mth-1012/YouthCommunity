@@ -1,6 +1,6 @@
 import * as React from "react";
 import NavBar from "./NavBar";
-import { styled } from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -10,20 +10,19 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
+import {red} from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import * as qs from "qs";
-import { Box } from "@mui/system";
+import {Box} from "@mui/system";
 import Moment from "react-moment";
 import moment from "moment";
 import api from "../api";
-import { Tab, Tabs } from "@mui/material";
 
-export default function Home() {
+export default function HomeLocal() {
   const [filteredPosts, setFilteredPosts] = React.useState([]);
   const [postList, setPostList] = React.useState([]);
   const [currentTab, setCurrentTab] = React.useState(0);
@@ -38,20 +37,15 @@ export default function Home() {
     };
     const currentUserData = JSON.parse(localStorage.getItem("userInfo"));
     const res = await api.post(
-      "/post/getList/interest",
+      "/post/getList/local",
       {
-        interests: currentUserData.interest,
+        location: currentUserData.location,
         chronological: true,
       },
       config
     );
-    if (res.data?.postList) {
-      const challangePost = res.data.postList.filter(
-        ({challenge}) => challenge
-      );
-      setFilteredPosts(challangePost);
-      setPostList(res.data.postList);
-    }
+    setFilteredPosts(res.data.postList);
+    setPostList(res.data.postList);
     console.log("Fetch Post Response : ", res);
   };
   React.useEffect(() => {
@@ -73,16 +67,6 @@ export default function Home() {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
-    if (newValue === 0) {
-      const challangePost = postList.filter(({challenge}) => challenge);
-      setFilteredPosts(challangePost);
-    } else {
-      const ideaPosts = postList.filter(({challenge}) => !challenge);
-      setFilteredPosts(ideaPosts);
-    }
-    setCurrentTab(newValue);
-  };
   return (
     <Box
       sx={{
@@ -92,34 +76,6 @@ export default function Home() {
       }}
     >
       <NavBar/>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          bgcolor: "background.paper",
-        }}
-      >
-        <Tabs
-          value={currentTab}
-          onChange={handleTabChange}
-          sx={{
-            flex: "1 1 auto",
-            display: "inline-block",
-            position: "relative",
-            whiteSpace: "nowrap",
-          }}
-        >
-          <Tab
-            label="Challenge"
-            sx={{flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1}}
-          />
-          <Tab
-            label="Idea"
-            sx={{flexGrow: 1, maxWidth: "none", flexBasis: 0, flexShrink: 1}}
-          />
-        </Tabs>
-      </Box>
       <Box
         sx={{
           width: "100%",

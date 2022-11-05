@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import Login from "./views/auth/Login";
 import SignUp from "./views/auth/Signup";
 import Home from "./views/Home";
+import HomeLocal from "./views/HomeLocal";
 function App() {
   return (
     <Suspense>
@@ -18,6 +19,7 @@ function App() {
           <Route path={"/login"} element={<Login />} />
           <Route path={"/signup"} element={<SignUp />} />
           <Route path={"/home"} element={<Home />} />
+          <Route path={"/homelocal"} element={<HomeLocal />} />
           <Route path="*" element={<Navigate to={"/login"} />} />
         </Routes>
       </Router>
