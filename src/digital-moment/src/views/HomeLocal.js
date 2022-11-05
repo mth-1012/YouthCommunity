@@ -124,11 +124,11 @@ export default function HomeLocal() {
                 {/*/>}*/}
                 <CardContent>
                   {challenge ?
-                    <Chip icon={<PsychologyAltIcon/>} label="Challenge" color="secondary"/>
+                    <Chip icon={<PsychologyAltIcon/>} label="Challenge" color="error"/>
                     : <Chip icon={<TipsAndUpdatesIcon/>} label="Idea" color="success"/>}
                   <Typography variant="body2" color="text.secondary">
-                    <p style={{color: "#FF0000"}}>
-                      {title + " | " + interest}
+                    <p>
+                      <strong>{title + " | " + interest}</strong>
                     </p>
                     <br/>
                     {description}
