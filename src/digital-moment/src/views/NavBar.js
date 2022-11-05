@@ -12,10 +12,25 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
+import axios from "axios";
+import AddPost from "./AddPost";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  Grid,
+  InputLabel,
+  OutlinedInput,
+  Select,
+  TextField,
+} from "@mui/material";
+import { Formik } from "formik";
 const pages = ["Posts", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
+const names = ["Challange", "Solution"];
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -33,6 +48,43 @@ function NavBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const onChange = (e) => {
+    console.log("FUNCTIONCALLED");
+    SetFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const [formData, SetFormData] = React.useState({
+    password: "",
+    username: "",
+    location: "",
+    email: "",
+    type: "Solution",
+  });
+  const { password, username, location, email, interest } = formData;
+
+  const addPost = async () => {
+    setOpen(true);
+    const config = {
+      method: "GET",
+      header: {
+        "Content-Type": "application/json",
+      },
+      validateStatus: () => true,
+    };
+    const res = await axios.get(
+      `http://localhost:5000/user/get/${localStorage.getItem("email")}`,
+      config
+    );
+    console.log("ADD POST  : ", res);
   };
 
   return (
@@ -122,6 +174,24 @@ function NavBar() {
                 {page}
               </Button>
             ))}
+          </Box>
+          <Box>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => setOpen(true)}
+            >
+              AddPost
+            </Button>
+          </Box>
+          <Box>
+            <AddPost
+              openPopup={open}
+              setOpenPopup={handleClickOpen}
+              closeOpenPopup={handleClose}
+            />
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

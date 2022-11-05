@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 function Copyright(props) {
   return (
     <Typography
@@ -33,14 +33,36 @@ const theme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate();
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
     });
-    navigate("/home");
+    var credentials = {
+      email: data.get("email"),
+      password: data.get("password"),
+    };
+
+    const config = {
+      method: "GET",
+      header: {
+        "Content-Type": "application/json",
+      },
+      validateStatus: () => true,
+    };
+    const res = await axios.get(
+      `http://localhost:5000/get/${credentials.email}/checkPassword/${credentials.password}`,
+      config
+    );
+    console.log("RES ", res);
+    if (res.data.match) {
+      navigate("/home");
+      localStorage.setItem("email", credentials.email);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (

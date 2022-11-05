@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,6 +20,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import { Formik } from "formik";
+import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -57,12 +60,14 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
-      userName: data.get("userName"),
+      username: data.get("username"),
       password: data.get("password"),
       interest: data.get("interest").split(","),
     });
@@ -84,12 +89,35 @@ export default function SignUp() {
   };
   const [formData, SetFormData] = React.useState({
     password: "",
-    userName: "",
+    username: "",
     location: "",
     email: "",
     interest: "",
   });
-  const { password, userName, location, email, interest } = formData;
+  const { password, username, location, email, interest } = formData;
+  const sendMail = async (event) => {
+    event.preventDefault();
+    const userData = new FormData(event.currentTarget);
+    console.log("Submitting ", userData);
+
+    var data = {
+      user: formData,
+    };
+    const config = {
+      method: "POST",
+      header: {
+        "Content-Type": "application/json",
+      },
+      validateStatus: () => true,
+    };
+    const res = await axios.post(
+      "http://localhost:5000/user/createUser",
+      data,
+      config
+    );
+    console.log("res from api ", res);
+    navigate("/login");
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -97,10 +125,11 @@ export default function SignUp() {
         <CssBaseline />
         <Formik
           initialValues={formData}
+          onSubmit={sendMail}
           validate={() => {
             const errors = {};
-            if (!userName.trim()) {
-              errors.userName = "First name is required !";
+            if (!username.trim()) {
+              errors.username = "First name is required !";
             }
             if (!email.trim()) {
               errors.email = "Email is Required !";
@@ -147,7 +176,7 @@ export default function SignUp() {
               <Box
                 component="form"
                 noValidate
-                onSubmit={handleSubmit}
+                onSubmit={sendMail}
                 sx={{ mt: 3 }}
               >
                 <Grid container spacing={2}>
@@ -155,14 +184,14 @@ export default function SignUp() {
                     <TextField
                       required
                       fullWidth
-                      id="userName"
+                      id="username"
                       label="User Name"
-                      name="userName"
+                      name="username"
                       autoComplete="family-name"
                       onChange={(e) => onChange(e)}
                     />
                     <p className="FormError">
-                      {touched.userName && errors.userName}
+                      {touched.username && errors.username}
                     </p>
                   </Grid>
                   <Grid item xs={12}>
@@ -174,6 +203,7 @@ export default function SignUp() {
                       type="location"
                       id="location"
                       autoComplete="new-location"
+                      onChange={(e) => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -197,6 +227,7 @@ export default function SignUp() {
                       type="password"
                       id="password"
                       autoComplete="new-password"
+                      onChange={(e) => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -259,6 +290,7 @@ export default function SignUp() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                  // onClick={sendMail}
                 >
                   Sign Up
                 </Button>
