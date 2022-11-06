@@ -17,16 +17,18 @@ import Grid from "@mui/material/Grid";
 import {Box} from "@mui/system";
 import moment from "moment";
 import api from "../api";
-import qs from "qs"
 import Chip from "@mui/material/Chip";
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 
 export default function Post() {
-  const [currentPost, setCurrentPost] = React.useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const nullPost = {username: "", location: "", createdAt: Date.now(), title: "", description: "", email: "", interest: "", starUN: false, tags: [], upvote: 0};
+  const [currentPost, setCurrentPost] = React.useState(nullPost);
+  const [searchParams] = useSearchParams();
 
-  const fetchData = async () => {
+  React.useEffect(() => {
+    console.log("Called Only Once");
+    const fetchData = async () => {
     const config = {
       method: "GET",
       header: {
@@ -42,8 +44,6 @@ export default function Post() {
     setCurrentPost(res.data?.post);
     console.log("Fetch Get Response : ", res.data);
   };
-  React.useEffect(() => {
-    console.log("Called Only Once");
     fetchData();
   }, []);
 
@@ -55,11 +55,11 @@ export default function Post() {
       },
     };
     const upvoteRes = await api.post(`/post/${postId}/upvote`, config);
-    // if (upvoteRes?.data.success) {
-    //   const clickedPost = postList.find(({_id}) => _id === postId);
-    //   clickedPost.upvote += 1;
-    //   setPostList([...postList, clickedPost]);
-    // }
+    if (upvoteRes?.data.success) {
+      const clickedPost = currentPost;
+      clickedPost.upvote += 1;
+      setCurrentPost(clickedPost);
+    }
   };
 
   return (
@@ -75,7 +75,7 @@ export default function Post() {
           <CardHeader
             avatar={
               <Avatar sx={{bgcolor: red[300]}} aria-label="recipe">
-                {"currentPost.username".charAt(0).toUpperCase()}
+                {currentPost.username.charAt(0).toUpperCase()}
               </Avatar>
             }
             action={
@@ -83,8 +83,8 @@ export default function Post() {
                 <MoreVertIcon/>
               </IconButton>
             }
-            title={"currentPost.username" + " | " + "currentPost.location"}
-            subheader={moment("createdAt").fromNow()}
+            title={currentPost.username + " | " + currentPost.location}
+            subheader={moment(currentPost.createdAt).fromNow()}
           />
           <CardMedia
             component="img"
@@ -99,19 +99,19 @@ export default function Post() {
               : <Chip icon={<TipsAndUpdatesIcon/>} label="Idea" color="success"/>}
             <Typography variant="body2" color="text.secondary">
               <p>
-                <strong>{"currentPost.title" + " | " + "currentPost.interest"}</strong>
+                <strong>{currentPost.title + " | " + currentPost.interest}</strong>
               </p>
               <br/>
-              {"description"}
+              {currentPost.description}
             </Typography>
-            {["tags"].map((tag) => (
+            {currentPost.tags.map((tag) => (
               <span style={{color: "#0000ff"}}> #{tag.trim()}</span>
             ))}
           </CardContent>
           <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">
-              <FavoriteIcon/>{" "}
-              {0}
+              <FavoriteIcon onClick={() => increaseUpvote(searchParams.get("_id"))}/>
+              {currentPost.upvote}
             </IconButton>
             <IconButton aria-label="share">
               <ShareIcon/>

@@ -136,7 +136,7 @@ export default function HomeLocal() {
                 </CardActionArea>
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites">
-                    <FavoriteIcon onClick={() => increaseUpvote(_id)}/>{" "}
+                    <FavoriteIcon onClick={() => increaseUpvote(_id)}/>
                     {upvote}
                   </IconButton>
                   <IconButton aria-label="share">
