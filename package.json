@@ -1,0 +1,25 @@
+{
+  "name": "youthcommunity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "cd src/digital-moment && npm start",
+    "backend": "cd src/server && npm start",
+    "dev": "concurrently --kill-others \"npm run frontend\" \"npm run backend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mth-1012/YouthCommunity.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mth-1012/YouthCommunity/issues"
+  },
+  "homepage": "https://github.com/mth-1012/YouthCommunity#readme",
+  "dependencies": {
+    "concurrently": "^7.5.0"
+  }
+}
