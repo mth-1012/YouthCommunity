@@ -51,6 +51,7 @@ router.post("/:id/upvote", async (req, res) => {
 router.get("/get/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const objectId = new ObjectId(id);
 
     const post = await Post.findOne({ _id: objectId });

@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
+import CardActionArea from "@mui/material/CardActionArea";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -116,27 +117,23 @@ export default function HomeLocal() {
                   title={username + " | " + location}
                   subheader={moment(createdAt).fromNow()}
                 />
-                {/*{Math.random() > 0.5 && <CardMedia*/}
-                {/*  component="img"*/}
-                {/*  height="194"*/}
-                {/*  image="https://picsum.photos/400/300"*/}
-                {/*  alt="Sample Image"*/}
-                {/*/>}*/}
-                <CardContent>
-                  {challenge ?
-                    <Chip icon={<PsychologyAltIcon/>} label="Challenge" color="error"/>
-                    : <Chip icon={<TipsAndUpdatesIcon/>} label="Idea" color="success"/>}
-                  <Typography variant="body2" color="text.secondary">
-                    <p>
-                      <strong>{title + " | " + interest}</strong>
-                    </p>
-                    <br/>
-                    {description}
-                  </Typography>
-                  {tags.map((tag) => (
-                    <span style={{color: "#0000ff"}}> #{tag.trim()}</span>
-                  ))}
-                </CardContent>
+                <CardActionArea href={"/post?_id=" + _id}>
+                  <CardContent>
+                    {challenge ?
+                      <Chip icon={<PsychologyAltIcon/>} label="Challenge" color="error"/>
+                      : <Chip icon={<TipsAndUpdatesIcon/>} label="Idea" color="success"/>}
+                    <Typography variant="body2" color="text.secondary">
+                      <p>
+                        <strong>{title + " | " + interest}</strong>
+                      </p>
+                      <br/>
+                      {description}
+                    </Typography>
+                    {tags.map((tag) => (
+                      <span style={{color: "#0000ff"}}> #{tag.trim()}</span>
+                    ))}
+                  </CardContent>
+                </CardActionArea>
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites">
                     <FavoriteIcon onClick={() => increaseUpvote(_id)}/>{" "}
