@@ -5,12 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    
-
-    "client": "npm start --prefix src/digital-moment",
-    "clientinstall": "npm install --prefix src/digital-moment",
+    "frontend": "cd src/digital-moment && npm start",
     "backend": "cd src/server && npm start",
-    "dev": "concurrently --kill-others \"npm run client\" \"npm run backend\""
+    "dev": "npm install && concurrently --kill-others  \"npm run frontend\" \"npm run backend\"",
+    "heroku-postbuild":"npm install && concurrently --kill-others  \"npm run frontend\" \"npm run backend\""
   },
   "repository": {
     "type": "git",
