@@ -3,13 +3,10 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userRouter from "./router/userRouter.js";
 import postRouter from "./router/postRouter.js";
-const uri =
-  "mongodb+srv://youthy:QXiqpMoHiYt6WpqQ@cluster0.qwte0k0.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://<YOUR MONGODB ATLAS LINK>";
 
 const app = express();
-// const cors = require("cors");
 
-app.use(cors()); // Use this after the variable declaration
 app.use(express.json());
 
 app.use("/user", userRouter);
